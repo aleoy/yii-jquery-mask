@@ -27,6 +27,10 @@ class JMask extends CWidget {
      */
     public $config = array();
     
+    /**
+     * @var string custom mask javascript handler 
+     */
+    public $maskScript;
     
     public function init() {
         $assets = dirname(__FILE__) . '/' . 'assets';
@@ -37,10 +41,18 @@ class JMask extends CWidget {
 
      public function run() {
          static $runCount = 1;
-         $maskCallScript = '';
-         $mask = $this->config['mask'];
-         unset($this->config['mask']);
-         if(empty($this->config)){
+         $maskCallScript = $mask = '';
+         
+         if(isset($this->config['mask'])){
+             $mask = $this->config['mask'];
+             unset($this->config['mask']);
+         }
+         
+         
+         if($this->maskScript !== NULL){
+             $maskCallScript = $this->maskScript;
+         }
+         elseif(empty($this->config)){
              $maskCallScript = '$("'.$this->element.'").mask(\''.$mask.'\')';
          }
          else{
