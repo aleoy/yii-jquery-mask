@@ -20,7 +20,17 @@ class JMask extends CWidget {
     /**
      * @var string the selected HTML elements
      */
-    public $element;
+    public $element = null;
+    
+    /**
+     * @var object instance of CModel
+     */
+    public $model = null;
+    
+    /**
+     * @var string attribute name of $this->model 
+     */
+    public $attribute = null;
     
     /**
      * @var array options for maskMoney 
@@ -48,6 +58,7 @@ class JMask extends CWidget {
              unset($this->config['mask']);
          }
          
+         $this->setElement();
          
          if($this->maskScript !== NULL){
              $maskCallScript = $this->maskScript;
@@ -66,6 +77,15 @@ class JMask extends CWidget {
          
          Yii::app()->clientScript->registerScript('processPrint'.$runCount, $maskCallScript);
          $runCount++;
+     }
+     
+     /*
+      * Sets the element attribute that will serve as DOM reference to apply the mask
+      */
+     protected function setElement(){    
+         if($this->element === NULL && is_object($this->model) && $this->attribute !== NULL){
+             $this->element = '#'.CHtml::activeId($this->model, $this->attribute);
+         }
      }
 }
 
